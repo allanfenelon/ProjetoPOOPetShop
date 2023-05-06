@@ -6,10 +6,13 @@ import br.com.petshop.Repositorios.*;
 public class Petshop {
 	
 	private double petshopLucro = 0.0;
-	/*private boolean secao = false;*/
+	private boolean secao;
+	private String logadoComo;
 	private Scanner ler = new Scanner(System.in);
 	
 	public Petshop() {
+		this.secao = false;
+		this.logadoComo = "";
 	}
 	
 	public void setPetshopLucro(double lucro) {
@@ -22,21 +25,43 @@ public class Petshop {
 		return this.petshopLucro;
 	}
 	
-	/*public void setSecao(boolean secao) {
+	public void setSecao(boolean secao) {
 		this.secao =secao;
 	}
 	
 	public boolean getSecao() {
 		return this.secao;
-	}*/
+	}
 		
 	
-	public void setupAdmPrincipal() {
-		System.out.println("+---- PAINEL PRINCIPAL ----+");
-		System.out.println("|(1) - Painel de Gerencia  |");
-		System.out.println("|(2) - Painel de vendas    |");
-		System.out.println("|(3) - Painel Veterinario  |");
-		System.out.println("+--------------------------+");
+	public void setupAdmPrincipal(RepoCliente repoCli, RepoVeterinarios repoVet, RepoVendedor repoVend, RepoAdministrador repoAdm){
+		if(this.secao) {
+			if(this.logadoComo.equals("Administrador")) {
+				System.out.println("+---- PAINEL PRINCIPAL ----+");
+				System.out.println("|(1) - Painel de Gerencia  |");
+				System.out.println("|(2) - Painel de vendas    |");
+				System.out.println("|(4) - Sair                |");
+				System.out.println("+--------------------------+");
+			}else if(this.logadoComo.equals("Vendedor")) {
+				System.out.println("+---- PAINEL PRINCIPAL ----+");
+				System.out.println("|(2) - Painel de vendas    |");
+				System.out.println("|(4) - Sair                |");
+				System.out.println("+--------------------------+");
+			}else if(this.logadoComo.equals("Veterinario")) {
+				System.out.println("+---- PAINEL PRINCIPAL ----+");
+				System.out.println("|(2) - Painel de vendas    |");
+				System.out.println("|(3) - Painel Veterinario  |");
+				System.out.println("|(4) - Sair                |");
+				System.out.println("+--------------------------+");
+			}
+		}else {
+		
+			System.out.println(this.secao);
+			System.out.println("+------ LOGIN ------+");
+			login(repoCli, repoVet, repoVend, repoAdm);
+			System.out.println("VOCE LOGOU COMO: " + this.logadoComo);
+		}
+
 	}
 	
 	public void setupAdm() {
@@ -51,7 +76,13 @@ public class Petshop {
 		System.out.println("|(8) - Remover Veterinario               |");
 		System.out.println("|(9) - Listar Veterinarios               |");
 		System.out.println("|(10) - Editar valor p/ hora veterinario |");
-		System.out.println("|(11) - Voltar                           |");
+		System.out.println("|(11) - Adicionar Adm                    |");
+		System.out.println("|(12) - Listar Adm                       |");
+		System.out.println("|(13) - Remover Adm                      |");
+		System.out.println("|(14) - Adcionar Vendedor                |");
+		System.out.println("|(15) - Listar Vendedores                |");
+		System.out.println("|(16) - Remover Vendedor                 |");
+		System.out.println("|(17) - Voltar                           |");
 		System.out.println("+----------------------------------------+");
 	}
 	
@@ -63,7 +94,9 @@ public class Petshop {
 		System.out.println("|(4) - Consultar divida Cliente  |");
 		System.out.println("|(5) - Listar Servicos           |");
 		System.out.println("|(6) - Gerar Faturamento do dia  |");
-		System.out.println("|(7) - Voltar ao inicio          |");
+		System.out.println("|(7) - Adicionar Cliente         |");
+		System.out.println("|(8) - Adicionar Servico         |");
+		System.out.println("|(9) - Voltar ao inicio          |");
 		System.out.println("+--------------------------------+");
 	}
 	
@@ -150,8 +183,8 @@ public class Petshop {
 		
 		System.out.print("Digite o nome do servico: ");
 		String nomeServ = ler.next();
-		if(repoServ.existeServico(nomeServ)) {
-			System.out.println("Digite o valor do servico: ");
+		if(!repoServ.existeServico(nomeServ)) {
+			System.out.println("Digite o valor do servico: no tipo xx,xx (com vírgula) ");
 			double valor = ler.nextDouble();
 			Servicos auxS = new Servicos(nomeServ, valor);
 			repoServ.setServicos(auxS);
@@ -265,7 +298,9 @@ public class Petshop {
 			String nomeVet = ler.next();
 			System.out.print("Digite o valor por hora desse veterinario: ");
 			double valorHora = ler.nextDouble();
-			Veterinario auxVet= new Veterinario(nomeVet, cpfVet, valorHora);
+			System.out.print("Digite a senha desse Veterinario: ");
+			String senha = ler.next();
+			Veterinario auxVet= new Veterinario(nomeVet, cpfVet, valorHora, senha);
 			repoVet.setVet(auxVet);
 			System.out.println("VETERINARIO ADICIONADO COM SUCESSO!");
 		}else {
@@ -413,6 +448,181 @@ public class Petshop {
 		}else {
 			System.out.println("NAO EXISTE VETERINARIO OU NAO EXISTE CLIENTES!");
 		}
+	}
+
+	public String getLogadoComo() {
+		return logadoComo;
+	}
+
+	public void setLogadoComo(String logadoComo) {
+		this.logadoComo = logadoComo;
+	}
+	
+	
+	public void login(RepoCliente repoCli, RepoVeterinarios repoVet, RepoVendedor repoVend, RepoAdministrador repoAdm) {
+		boolean condicao =true;
+		while(condicao) {
+			System.out.println("(1) - Logar como Vendedor");
+			System.out.println("(2) - Logar como ADM");
+			System.out.println("(3) - Logar como Veterinário");
+			int opcao = ler.nextInt();
+			if(opcao == 1) {
+				if(!repoVend.estaVazio()) {
+					System.out.print("Digite o CPF: ");
+					String cpf = ler.next();
+					System.out.print("Difite a senha: ");
+					String senha = ler.next();
+					if(repoVend.existeVendedor(cpf)) {
+						if(repoVend.getVendedores(cpf).getSenha().equals(senha)){
+							this.secao = true;
+							this.logadoComo = repoVend.getVendedores(cpf).getTipoUsuario();
+							System.out.println("Logado com sucesso!");
+							condicao = false;
+							
+						}else {
+							System.out.println("SENHA INCORRETA!");
+						}
+					}else {
+						System.out.println("VENDEDOR NAO ENCONTRADO!");
+					}
+				}else {
+					System.out.println("NAO EXISTE VENDEDORES PARA FAZER LOGIN!");
+				}
+			}else if(opcao == 2) {
+				if(!repoAdm.estaVazio()) {
+					System.out.print("Digite o CPF: ");
+					String cpf = ler.next();
+					System.out.print("Digite a senha: ");
+					String senha = ler.next();
+					if(repoAdm.existeAdm(cpf)) {
+						if(repoAdm.getAdministradores(cpf).getSenha().equals(senha)) {
+							this.secao = true;
+							this.logadoComo = repoAdm.getAdministradores(cpf).getTipoUsuario();
+							System.out.println("LOGADO COM SUCESSO!");
+							condicao = false;
+						}
+					}else {
+						System.out.println("NAO EXISTE ADM COM ESSE CPF!");
+					}
+				}else {
+					System.out.println("NAO EXISTE ADM PARA FAZER LOGIN!");
+				}
+			}else if(opcao == 3) {
+				if(!repoVet.estaVazio()) {
+					System.out.print("Digite o CPF: ");
+					String cpf =ler.next();
+					if(repoVet.existeVet(cpf)) {
+						System.out.print("Digite a senha: ");
+						String senha = ler.next();
+						if(repoVet.getVet(cpf).getSenha().equals(senha)) {
+							System.out.println("LOGIN FEITO COM SUCESSO!");
+							this.secao = true;
+							this.logadoComo = repoVet.getVet(cpf).getTipoUsuario();
+							System.out.println("Logado com sucesso!");
+							condicao = false;
+						}else {
+							System.out.println("SENHA INCORRETA!");
+						}
+						
+					}else {
+						System.out.println("CPF INVALIDO, TENTE NOVAMENTE!");
+					}
+				}else {
+					System.out.println("NAO EXISTE CONTAS DE VETERINARIO!");
+				}
+			}else {
+				System.out.println("OPCAO INVALIDA, TENTE NOVAMENTE!");
+			}
+		}
+	}
+	
+	public void addAdm(RepoAdministrador repoAdm) {
+		System.out.print("Digite o nome do Administrador: ");
+		String nome = ler.next();
+		System.out.print("Digite o CPF do Administrador: ");
+		String cpf = ler.next();
+		if(!repoAdm.existeAdm(cpf)) {
+			System.out.print("Digite a senha: ");
+			String senha = ler.next();
+			Administrador auxadm = new Administrador(nome, cpf, senha);
+			repoAdm.setAdministradores(auxadm);
+			System.out.println("ADM ADICIONADO COM SUCESSO!");
+		}else {
+			System.out.println("JA EXISTE UM ADM COM ESSE CPF!");
+		}
+	}
+	
+	public void listarAdm(RepoAdministrador repoAdm) {
+		if(repoAdm.estaVazio()) {
+			System.out.println("+--------------------");
+			System.out.println("vazio");
+			System.out.println("+--------------------");
+		}else {
+			System.out.println("-> LISTAGEM DE ADMS <-");
+			repoAdm.listarAdm();
+			System.out.println("+------------------------+");
+		}
+	}
+	
+	public void removeAdm(RepoAdministrador repoAdm) {
+		if(!repoAdm.estaVazio()) {
+			System.out.print("Digite o CPF do adm que quer remover: ");
+			String cpf = ler.next();
+			if(repoAdm.existeAdm(cpf)) {
+				repoAdm.excluirAdm(cpf);
+				System.out.println("ADM REMOVIDO COM SUCESSO!");
+			}else
+				System.out.println("O ADM COM ESSE CPF NAO EXISTE NO NOSSO BANCO DE DADOS!");
+		}else {
+			System.out.println("REPOSITORIO VAZIO, NADA A REMOVER!");
+		}
+	}
+	
+	public void addVendedor(RepoVendedor repoVend) {
+		System.out.print("Digite o nome do vendedor: ");
+		String nome = ler.next();
+		System.out.print("Digite o CPFdo vendedodor: ");
+		String cpf = ler.next();
+		if(!repoVend.existeVendedor(cpf)) {
+			System.out.print("Digite a senha do vendedor: ");
+			String senha = ler.next();
+			Vendedor aux = new Vendedor(nome, cpf, senha);
+			repoVend.setVendedores(aux);
+		}else {
+			System.out.println("JA EXISTE VENDEDOR COM ESSE CPF!");
+		}
+	}
+	
+	public void listarVendedor(RepoVendedor repoVend) {
+		if(repoVend.estaVazio()) {
+			System.out.println("+--------------------");
+			System.out.println("vazio");
+			System.out.println("+--------------------");
+		}else {
+			System.out.println("-> LISTAGEM DE ADMS <-");
+			repoVend.listarVendedores();
+			System.out.println("+------------------------+");
+		}
+	}
+	
+	public void removerVendedor(RepoVendedor repoVend) {
+		if(!repoVend.estaVazio()) {
+			System.out.print("Digite o cpf do vendedor: ");
+			String cpf = ler.next();
+			if(repoVend.existeVendedor(cpf)) {
+				repoVend.excluirVendedor(cpf);
+			}else {
+				System.out.println("NAO EXISTE VENDEDOR COM ESSE CPF!");
+			}
+		}else {
+			System.out.println("NAO EXISTE NENHUM VENDEDOR NO BANCO DE DADOS!");
+		}
+	}
+	
+	public void logout() {
+		this.logadoComo = "";
+		this.secao = false;
+		System.out.println("DESLOGADO COM SUCESSO!");
 	}
 	
 }

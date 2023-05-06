@@ -27,7 +27,7 @@ public class RepoVeterinarios {
 	private int indiceBusca(String cpf) {
 		int indice = -1;
 		for(int j = 0; j<vet.size(); j++) {
-			if(vet.get(j).getNome().equals(cpf)) {
+			if(vet.get(j).getCpf().equals(cpf)) {
 				indice = j;
 				break;
 			}
@@ -55,7 +55,7 @@ public class RepoVeterinarios {
 	public boolean existeVet(String cpf) {
 		int indice;
 		indice = indiceBusca(cpf);
-		if(indice>=0) {
+		if(indice!=-1) {
 			return true;
 		}else {
 			return false;
