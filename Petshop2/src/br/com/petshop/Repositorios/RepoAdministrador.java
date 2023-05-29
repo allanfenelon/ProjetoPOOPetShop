@@ -1,25 +1,27 @@
 package br.com.petshop.Repositorios;
 
 import java.util.ArrayList;
-import br.com.petshop.Classes.Administrador;
 
-public class RepoAdministrador {
+
+import br.com.petshop.Negocio.Administrador;
+
+public class RepoAdministrador implements RepoInterfaceAdm{
 	private ArrayList<Administrador> administradores;
 	
 	public RepoAdministrador() {
 		this.administradores = new ArrayList<Administrador>();
 	}
 
-	public Administrador getAdministradores(String cpf) {
+	public Administrador getAdministradores(String cpf){
 		int indice = indiceBusca(cpf);
-		if(indice>=0) {
-			return administradores.get(indice);
-		}
-		return null;
+	
+		return administradores.get(indice);
+		
 	}
 
-	public void setAdministradores(Administrador administrador) {
+	public void setAdministradores(Administrador administrador){
 		this.administradores.add(administrador);
+		
 	}
 	
 	private int indiceBusca(String cpf) {
@@ -33,15 +35,14 @@ public class RepoAdministrador {
 		return indice;
 	}
 	
-	public void excluirAdm(String cpf) {
+	public void excluirAdm(String cpf){
 		int indice;
 		indice = indiceBusca(cpf);
-		if(indice>=0) {
-			this.administradores.remove(indice);
-		}
+
+		this.administradores.remove(indice);
 	}
 	
-	public boolean existeAdm(String cpf) {
+	public boolean existeAdm(String cpf){
 		int indice;
 		indice = indiceBusca(cpf);
 		if(indice!=-1) {
@@ -51,12 +52,11 @@ public class RepoAdministrador {
 		}
 	}
 	
-	public boolean estaVazio() {
+	public boolean estaVazio(){
 		if(administradores.size() == 0) {
 			return true;
-		}else {
-			return false;
 		}
+		return false;
 	}
 	
 	public void listarAdm() {

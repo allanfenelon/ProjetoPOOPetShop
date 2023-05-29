@@ -1,9 +1,10 @@
 package br.com.petshop.Repositorios;
 
 import java.util.ArrayList;
-import br.com.petshop.Classes.Servicos;
 
-public class RepoServicos {
+import br.com.petshop.Negocio.Servicos;
+
+public class RepoServicos implements RepoInterfaceServicos{
 	private ArrayList<Servicos> servicos;
 	
 	public RepoServicos() {

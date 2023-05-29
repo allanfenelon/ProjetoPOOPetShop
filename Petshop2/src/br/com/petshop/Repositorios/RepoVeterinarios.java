@@ -1,10 +1,11 @@
 package br.com.petshop.Repositorios;
 import java.util.ArrayList;
 
-import br.com.petshop.Classes.Veterinario;
+
+import br.com.petshop.Negocio.Veterinario;
 
 
-public class RepoVeterinarios {
+public class RepoVeterinarios implements RepoInterfaceVet{
 	private ArrayList<Veterinario> vet;
 
 	public RepoVeterinarios() {
@@ -14,13 +15,11 @@ public class RepoVeterinarios {
 	public Veterinario getVet(String cpf){
 		int indice;
 		indice = indiceBusca(cpf);
-		if(indice>=0) {
-			return vet.get(indice);
-		}
-		return null;
+		return vet.get(indice);
+
 	}
 	
-	public void setVet(Veterinario vet) {
+	public void setVet(Veterinario vet){
 		this.vet.add(vet);
 	}
 	
@@ -52,22 +51,20 @@ public class RepoVeterinarios {
 		}
 	}
 	
-	public boolean existeVet(String cpf) {
+	public boolean existeVet(String cpf){
 		int indice;
 		indice = indiceBusca(cpf);
 		if(indice!=-1) {
 			return true;
-		}else {
-			return false;
 		}
+		return false;
 	}
 	
-	public boolean estaVazio() {
+	public boolean estaVazio(){
 		if(vet.size() == 0) {
 			return true;
-		}else {
-			return false;
 		}
+		return false;
 	}
 	
 	public void listarVeterinario() {

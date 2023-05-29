@@ -1,24 +1,23 @@
 package br.com.petshop.Repositorios;
 
 import java.util.ArrayList;
-import br.com.petshop.Classes.Vendedor;
 
-public class RepoVendedor {
+
+import br.com.petshop.Negocio.Vendedor;
+
+public class RepoVendedor implements RepoInterfaceVendedor{
 	private ArrayList<Vendedor> vendedores;
 	
 	public RepoVendedor() {
 		this.vendedores = new ArrayList<Vendedor>();
 	}
 
-	public Vendedor getVendedores(String cpf) {
+	public Vendedor getVendedores(String cpf){
 		int indice = indiceBusca(cpf);
-		if(indice>=0) {
-			return vendedores.get(indice);
-		}
-		return null;
+		return vendedores.get(indice);
 	}
 
-	public void setVendedores(Vendedor vendedore) {
+	public void setVendedores(Vendedor vendedore){
 		this.vendedores.add(vendedore);
 	}
 	
@@ -33,22 +32,20 @@ public class RepoVendedor {
 		return indice;
 	}
 	
-	public boolean existeVendedor(String cpf) {
+	public boolean existeVendedor(String cpf){
 		int indice;
 		indice = indiceBusca(cpf);
 		if(indice>=0) {
 			return true;
-		}else {
-			return false;
 		}
+		return false;
 	}
 	
-	public boolean estaVazio() {
+	public boolean estaVazio(){
 		if(vendedores.size() == 0) {
 			return true;
-		}else {
-			return false;
 		}
+		return false;
 	}
 	
 	public void listarVendedores() {

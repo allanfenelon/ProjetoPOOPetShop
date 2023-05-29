@@ -1,25 +1,23 @@
 package br.com.petshop.Repositorios;
 import java.util.ArrayList;
 
-import br.com.petshop.Classes.*;
-public class RepoCliente {
+
+import br.com.petshop.Negocio.*;
+public class RepoCliente implements RepoInterfaceCliente{
 	private ArrayList<Cliente> clientes;
 	
 	public RepoCliente() {
 		this.clientes = new ArrayList<Cliente>();
 	}
 	
-	public void setClientes(Cliente cliente) {
+	public void setClientes(Cliente cliente){
 		this.clientes.add(cliente);
 	}
 	
 	public Cliente getCliente(String cpf){
 		int indice;
 		indice = indiceBusca(cpf);
-		if(indice>=0) {
-			return clientes.get(indice);
-		}
-		return null;
+		return clientes.get(indice);
 	}
 	
 	private int indiceBusca(String cpf) {
@@ -34,7 +32,8 @@ public class RepoCliente {
 	}
 	
 	public void modificarCliente(String cpf, Cliente newCliente) {
-		if(!repoVazio()) {
+			
+		if(this.clientes.size()==0) {
 			int indice;
 			indice = indiceBusca(cpf);
 			if(indice>=0) {
@@ -44,7 +43,7 @@ public class RepoCliente {
 	}
 	
 	public void excluirCliente(String cpf) {
-		if(!repoVazio()) {
+		if(this.clientes.size()==0) {
 			int indice;
 			indice = indiceBusca(cpf);
 			if(indice>=0) {
@@ -59,21 +58,19 @@ public class RepoCliente {
 		}
 	}
 	
-	public boolean repoVazio() {
+	public boolean repoVazio(){
 		if(clientes.size() == 0) {
 			return true;
-		}else {
-			return false;
 		}
+		return false;
 	}
 	
-	public boolean existeCliente(String cpf) {
+	public boolean existeCliente(String cpf){
 		int i;
 		i = indiceBusca(cpf);
-		if(i>=0) {
+		if(i!=-1) {
 			return true;
-		}else {
-			return false;
 		}
+		return false;
 	}
 }
